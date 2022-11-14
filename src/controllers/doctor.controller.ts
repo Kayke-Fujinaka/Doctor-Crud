@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Patch,
@@ -19,7 +20,8 @@ export class DoctorController {
     @InjectRepository(DoctorModel) private model: Repository<DoctorModel>,
   ) {}
 
-  @Post()
+  @Post('create')
+  @HttpCode(201)
   public async create(
     @Body() body: DoctorSchema,
   ): Promise<{ data: DoctorModel }> {
@@ -27,10 +29,16 @@ export class DoctorController {
     return { data: doctorCreated };
   }
 
-  @Get()
-  public async read(): Promise<{ doctors: DoctorModel[] }> {
+  @Get('allList')
+  public async readAll(): Promise<{ doctors: DoctorModel[] }> {
     const list = await this.model.find();
     return { doctors: list };
+  }
+
+  @Get(':id')
+  public async readOne(@Param('id') id: number): Promise<any> {
+    const doctor = await this.model.findOne({ where: { id } });
+    return { data: doctor };
   }
 
   @Patch('updateInfo/:id')
@@ -38,7 +46,7 @@ export class DoctorController {
     @Param('id')
     id: number,
     @Body() body: DoctorSchema,
-  ) {
+  ): Promise<{ data: DoctorModel }> {
     const person = await this.model.findOne({ where: { id } });
 
     if (!person)
@@ -49,8 +57,18 @@ export class DoctorController {
     return { data: await this.model.findOne({ where: { id } }) };
   }
 
-  @Delete(':id')
-  public delete(): any {
-    return { data: 'Delete!!!' };
+  @Delete('delete/:id')
+  public async delete(
+    @Param('id')
+    id: number,
+  ): Promise<{ data: string }> {
+    const person = await this.model.findOne({ where: { id } });
+
+    if (!person)
+      throw new NotFoundException(`Não achamos um doutor com o id ${id}`);
+
+    await this.model.delete({ id });
+
+    return { data: `A pessoa com o id ${id} foi deletada com sucesso!!!` };
   }
 }
