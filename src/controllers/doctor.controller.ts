@@ -10,8 +10,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Doctor } from 'src/entities/doctor.entities';
 import { DoctorModel } from 'src/models/doctor.model';
-import { DoctorSchema } from 'src/schemas/doctor.schema';
 import { Repository } from 'typeorm';
 
 @Controller('/doctor')
@@ -22,9 +22,7 @@ export class DoctorController {
 
   @Post('create')
   @HttpCode(201)
-  public async create(
-    @Body() body: DoctorSchema,
-  ): Promise<{ data: DoctorModel }> {
+  public async create(@Body() body: Doctor): Promise<{ data: DoctorModel }> {
     const doctorCreated = await this.model.save(body);
     return { data: doctorCreated };
   }
@@ -36,7 +34,9 @@ export class DoctorController {
   }
 
   @Get(':id')
-  public async readOne(@Param('id') id: number): Promise<any> {
+  public async readOne(
+    @Param('id') id: number,
+  ): Promise<{ data: DoctorModel }> {
     const doctor = await this.model.findOne({ where: { id } });
     return { data: doctor };
   }
@@ -45,7 +45,7 @@ export class DoctorController {
   public async update(
     @Param('id')
     id: number,
-    @Body() body: DoctorSchema,
+    @Body() body: Doctor,
   ): Promise<{ data: DoctorModel }> {
     const person = await this.model.findOne({ where: { id } });
 
