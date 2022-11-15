@@ -1,6 +1,5 @@
 import {
   IsNotEmpty,
-  IsNumber,
   IsNumberString,
   IsString,
   MaxLength,
@@ -12,18 +11,26 @@ export class CreateDoctorDto {
   @MaxLength(120)
   nome: string;
 
-  @IsNumber()
-  crm: number;
-
+  @IsNotEmpty()
   @IsNumberString()
+  @MaxLength(7)
+  crm: string;
+
+  @IsNotEmpty()
+  @IsNumberString()
+  @MaxLength(15)
   landlinePhone: string;
 
+  @IsNotEmpty()
   @IsNumberString()
+  @MaxLength(15)
   mobilePhone: string;
 
-  @IsNumber()
-  zipCode: number;
+  @IsNotEmpty()
+  @IsNumberString()
+  zipCode: string;
 
+  @IsNotEmpty()
   @IsString()
   medicalSpecialty: string;
 }
