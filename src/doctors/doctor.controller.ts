@@ -21,7 +21,7 @@ export class DoctorController {
   @HttpCode(201)
   public async create(
     @Body() body: CreateDoctorDto,
-  ): Promise<{ data: Doctor }> {
+  ): Promise<{ data: Doctor | string }> {
     return await this.doctorService.create(body);
   }
 
@@ -40,7 +40,7 @@ export class DoctorController {
     @Param('id')
     id: number,
     @Body() body: UpdateDoctorInfoDto,
-  ): Promise<{ data: Doctor }> {
+  ): Promise<{ data: Doctor | string }> {
     return await this.doctorService.update(id, body);
   }
 
