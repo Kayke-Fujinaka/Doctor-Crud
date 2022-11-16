@@ -9,7 +9,7 @@ export class CreateDoctorDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(120)
-  nome: string;
+  name: string;
 
   @IsNotEmpty()
   @IsNumberString()

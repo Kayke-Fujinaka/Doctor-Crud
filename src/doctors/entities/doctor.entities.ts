@@ -14,7 +14,7 @@ export class Doctor {
   @Column()
   @IsString()
   @MaxLength(120)
-  nome: string;
+  name: string;
 
   @Column()
   @IsNumberString()

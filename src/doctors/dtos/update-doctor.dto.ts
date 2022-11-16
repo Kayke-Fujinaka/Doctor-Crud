@@ -2,10 +2,7 @@ import { IsOptional } from 'class-validator';
 
 export class UpdateDoctorInfoDto {
   @IsOptional()
-  nome?: string;
-
-  @IsOptional()
-  crm?: string;
+  name?: string;
 
   @IsOptional()
   landlinePhone?: string;
