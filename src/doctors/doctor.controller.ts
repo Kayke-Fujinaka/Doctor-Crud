@@ -19,19 +19,17 @@ export class DoctorController {
 
   @Post('create')
   @HttpCode(201)
-  public async create(
-    @Body() body: CreateDoctorDto,
-  ): Promise<{ data: Doctor | string }> {
+  public async create(@Body() body: CreateDoctorDto): Promise<Doctor | string> {
     return await this.doctorService.create(body);
   }
 
   @Get('allList')
-  public async readAll(): Promise<{ doctors: Doctor[] }> {
+  public async readAll(): Promise<Doctor[]> {
     return await this.doctorService.readAll();
   }
 
   @Get(':id')
-  public async readById(@Param('id') id: number): Promise<{ data: Doctor }> {
+  public async readById(@Param('id') id: number): Promise<Doctor> {
     return await this.doctorService.readById(id);
   }
 
@@ -40,7 +38,7 @@ export class DoctorController {
     @Param('id')
     id: number,
     @Body() body: UpdateDoctorInfoDto,
-  ): Promise<{ data: Doctor | string }> {
+  ): Promise<Doctor | string> {
     return await this.doctorService.update(id, body);
   }
 
@@ -48,7 +46,7 @@ export class DoctorController {
   public async delete(
     @Param('id')
     id: number,
-  ): Promise<{ data: string }> {
+  ): Promise<string> {
     return await this.doctorService.delete(id);
   }
 }
