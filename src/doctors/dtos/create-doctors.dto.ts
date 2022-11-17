@@ -1,9 +1,12 @@
 import {
+  ArrayMinSize,
+  IsArray,
   IsNotEmpty,
   IsNumberString,
   IsString,
   MaxLength,
 } from 'class-validator';
+import { Speciality } from 'src/specialitys/entities/speciality.entity';
 
 export class CreateDoctorDto {
   @IsNotEmpty()
@@ -30,7 +33,7 @@ export class CreateDoctorDto {
   @IsNumberString()
   zipCode: string;
 
-  @IsNotEmpty()
-  @IsString()
-  medicalSpecialty: string;
+  @IsArray()
+  @ArrayMinSize(2)
+  medicalSpecialty: Speciality[];
 }

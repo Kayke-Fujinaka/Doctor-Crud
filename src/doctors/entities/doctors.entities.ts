@@ -1,8 +1,11 @@
 import { IsNumberString, IsString, MaxLength } from 'class-validator';
+import { Speciality } from 'src/specialitys/entities/speciality.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -35,9 +38,9 @@ export class Doctor {
   @IsNumberString()
   zipCode: string;
 
-  @Column()
-  @IsString()
-  medicalSpecialty: string;
+  @ManyToMany(() => Speciality)
+  @JoinTable()
+  medicalSpecialty: Speciality[];
 
   @DeleteDateColumn()
   deletedAt?: Date;

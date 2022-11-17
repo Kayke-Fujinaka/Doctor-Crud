@@ -1,4 +1,5 @@
-import { IsOptional } from 'class-validator';
+import { IsArray, IsOptional } from 'class-validator';
+import { Speciality } from 'src/specialitys/entities/speciality.entity';
 
 export class UpdateDoctorInfoDto {
   @IsOptional()
@@ -14,5 +15,6 @@ export class UpdateDoctorInfoDto {
   zipCode?: string;
 
   @IsOptional()
-  medicalSpecialty?: string;
+  @IsArray()
+  medicalSpecialty?: Speciality[];
 }
