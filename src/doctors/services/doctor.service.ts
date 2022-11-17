@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dtos/create-doctors.dto';
 import { UpdateDoctorInfoDto } from '../dtos/update-doctors.dto';
 import { Doctor } from '../entities/doctors.entities';
-//const axios = require('axios');
 import { DoctorZipCodeProvider } from '../providers/doctors-zipcode-provider';
 
 @Injectable()
@@ -26,7 +25,6 @@ export class DoctorService {
     landlinePhone,
     mobilePhone,
     zipCode,
-    medicalSpecialty,
   }: CreateDoctorDto): Promise<Doctor | string> {
     const body = {
       name,
@@ -34,7 +32,6 @@ export class DoctorService {
       landlinePhone,
       mobilePhone,
       zipCode,
-      medicalSpecialty,
     };
 
     const { data } = await this.doctorZipCodeProvider.getZipCode(body.zipCode);
@@ -54,7 +51,7 @@ export class DoctorService {
     });
 
     if (isDoctorExists) {
-      throw new ConflictException('CRM já cadastrado');
+      throw new ConflictException('crm is already registered');
     }
 
     const doctorCreated = this.doctorRepository.save(
@@ -65,7 +62,9 @@ export class DoctorService {
   }
 
   public readAll(): Promise<Doctor[]> {
-    return this.doctorRepository.find();
+    return this.doctorRepository.find({
+      relations: ['medicalSpeciality'],
+    });
   }
 
   public readById(id: number): Promise<Doctor> {
@@ -79,7 +78,7 @@ export class DoctorService {
       landlinePhone,
       mobilePhone,
       zipCode,
-      medicalSpecialty,
+      medicalSpeciality,
     }: UpdateDoctorInfoDto,
   ): Promise<Doctor | string> {
     const body = {
@@ -87,13 +86,13 @@ export class DoctorService {
       landlinePhone,
       mobilePhone,
       zipCode,
-      medicalSpecialty,
+      medicalSpeciality,
     };
 
-    const person = await this.doctorRepository.findOne({ where: { id } });
+    const person = await this.doctorRepository.findOne({ where: { id } }); // Criar uma função Reutilizável
 
     if (!person)
-      throw new NotFoundException(`Não achamos um doutor com o id ${id}`);
+      throw new NotFoundException(`we couldn't find a doctor with id ${id}`);
 
     await this.doctorRepository.update({ id }, body);
 
@@ -106,10 +105,10 @@ export class DoctorService {
     const person = await this.doctorRepository.findOne({ where: { id } });
 
     if (!person)
-      throw new NotFoundException(`Não achamos um doutor com o id ${id}`);
+      throw new NotFoundException(`we couldn't find a doctor with id ${id}`);
 
     await this.doctorRepository.delete({ id });
 
-    return `A pessoa com o id ${id} foi deletada com sucesso!!!`;
+    return `the doctor with the id ${id} was successfully deleted!`;
   }
 }
