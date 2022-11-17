@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './configs/ormconfig';
 import { DoctorModule } from './doctors/doctors.module';
-import { SpecialitysModule } from './specialitys/specialitys.module';
+import { SpecialitiesModule } from './specialities/specialities.module';
 
 @Module({
-  imports: [DoctorModule, TypeOrmModule.forRoot(config), SpecialitysModule],
+  imports: [DoctorModule, TypeOrmModule.forRoot(config), SpecialitiesModule],
 })
 export class AppModule {}

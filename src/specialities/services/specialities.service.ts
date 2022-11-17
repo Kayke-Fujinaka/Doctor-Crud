@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSpecialityDto } from '../dto/create-speciality.dto';
-import { UpdateSpecialityDto } from '../dto/update-speciality.dto';
+import { CreateSpecialityDto } from '../dtos/create-speciality.dto';
+import { UpdateSpecialityDto } from '../dtos/update-speciality.dto';
 
 @Injectable()
-export class SpecialitysService {
+export class SpecialitiesService {
   create(createSpecialityDto: CreateSpecialityDto) {
     return 'This action adds a new speciality';
   }
 
   findAll() {
-    return `This action returns all specialitys`;
+    return `This action returns all Specialities`;
   }
 
   findOne(id: number) {

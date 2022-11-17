@@ -1,5 +1,5 @@
 import { IsNumberString, IsString, MaxLength } from 'class-validator';
-import { Speciality } from 'src/specialitys/entities/speciality.entity';
+import { Speciality } from 'src/specialities/entities/specialities.entity';
 import {
   Column,
   DeleteDateColumn,
@@ -40,7 +40,7 @@ export class Doctor {
 
   @ManyToMany(() => Speciality)
   @JoinTable()
-  medicalSpecialty: Speciality[];
+  medicalSpeciality: Speciality[];
 
   @DeleteDateColumn()
   deletedAt?: Date;
