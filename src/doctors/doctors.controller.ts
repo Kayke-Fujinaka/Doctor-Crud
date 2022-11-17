@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateDoctorDto } from 'src/doctors/dtos/create-doctors.dto';
 import { Doctor } from 'src/doctors/entities/doctors.entities';
@@ -28,9 +29,9 @@ export class DoctorController {
     return await this.doctorService.readAll();
   }
 
-  @Get(':id')
-  public async readById(@Param('id') id: number): Promise<Doctor> {
-    return await this.doctorService.readById(id);
+  @Get('/filter')
+  public async filter(@Query() searchByAttr: string): Promise<Doctor[]> {
+    return this.doctorService.filterDoctor(searchByAttr);
   }
 
   @Patch(':id')

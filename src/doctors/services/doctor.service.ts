@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import {
   ConflictException,
   Injectable,
@@ -12,12 +12,14 @@ import { Doctor } from '../entities/doctors.entities';
 import { DoctorZipCodeProvider } from '../providers/doctors-zipcode-provider';
 
 @Injectable()
-export class DoctorService {
+export class DoctorService extends TypeOrmQueryService<Doctor> {
   constructor(
     private readonly doctorZipCodeProvider: DoctorZipCodeProvider,
     @InjectRepository(Doctor)
     private readonly doctorRepository: Repository<Doctor>,
-  ) {}
+  ) {
+    super(doctorRepository, { useSoftDelete: true });
+  }
 
   public async create({
     name,
@@ -69,8 +71,12 @@ export class DoctorService {
     });
   }
 
-  public readById(id: number): Promise<Doctor> {
-    return this.doctorRepository.findOne({ where: { id } });
+  public async filterDoctor(searchByAttr: string): Promise<Doctor[]> {
+    return this.doctorRepository
+      .createQueryBuilder('doctor')
+      .where(searchByAttr)
+      .select('doctor')
+      .getMany();
   }
 
   public async update(
