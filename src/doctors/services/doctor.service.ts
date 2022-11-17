@@ -20,8 +20,22 @@ export class DoctorService {
     private readonly doctorRepository: Repository<Doctor>,
   ) {}
 
-  public async create(body: CreateDoctorDto): Promise<Doctor | string> {
-    const { crm } = body;
+  public async create({
+    name,
+    crm,
+    landlinePhone,
+    mobilePhone,
+    zipCode,
+    medicalSpecialty,
+  }: CreateDoctorDto): Promise<Doctor | string> {
+    const body = {
+      name,
+      crm,
+      landlinePhone,
+      mobilePhone,
+      zipCode,
+      medicalSpecialty,
+    };
 
     const { data } = await this.doctorZipCodeProvider.getZipCode(body.zipCode);
 
