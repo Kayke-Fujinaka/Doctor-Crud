@@ -8,38 +8,35 @@ import {
   Post,
 } from '@nestjs/common';
 import { CreateSpecialityDto } from './dtos/create-speciality.dto';
-import { UpdateSpecialityDto } from './dtos/update-speciality.dto';
+import { UpdateSpecialityInfoDto } from './dtos/update-speciality.dto';
+import { Speciality } from './entities/specialities.entity';
 import { SpecialitiesService } from './services/specialities.service';
 
 @Controller('specialities')
 export class SpecialitiesController {
   constructor(private readonly SpecialitiesService: SpecialitiesService) {}
 
-  @Post()
-  create(@Body() createSpecialityDto: CreateSpecialityDto) {
-    return this.SpecialitiesService.create(createSpecialityDto);
+  @Post('/')
+  public async create(@Body() body: CreateSpecialityDto): Promise<Speciality> {
+    return this.SpecialitiesService.create(body);
   }
 
-  @Get()
-  findAll() {
-    return this.SpecialitiesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.SpecialitiesService.findOne(+id);
+  @Get('/')
+  public async readAll(): Promise<Speciality[]> {
+    return this.SpecialitiesService.readAll();
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateSpecialityDto: UpdateSpecialityDto,
-  ) {
-    return this.SpecialitiesService.update(+id, updateSpecialityDto);
+  public async update(
+    @Param('id')
+    id: string,
+    @Body() { name }: UpdateSpecialityInfoDto,
+  ): Promise<Speciality | string> {
+    return this.SpecialitiesService.update(id, name);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.SpecialitiesService.remove(+id);
+  public async delete(@Param('id') id: string): Promise<string> {
+    return this.SpecialitiesService.delete(id);
   }
 }

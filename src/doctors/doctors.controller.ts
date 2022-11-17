@@ -39,7 +39,7 @@ export class DoctorController {
     id: number,
     @Body() body: UpdateDoctorInfoDto,
   ): Promise<Doctor | string> {
-    return await this.doctorService.update(id, body);
+    return this.doctorService.update(id, body);
   }
 
   @Delete(':id')

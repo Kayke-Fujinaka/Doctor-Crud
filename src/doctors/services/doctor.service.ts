@@ -25,6 +25,7 @@ export class DoctorService {
     landlinePhone,
     mobilePhone,
     zipCode,
+    medicalSpeciality,
   }: CreateDoctorDto): Promise<Doctor | string> {
     const body = {
       name,
@@ -32,6 +33,7 @@ export class DoctorService {
       landlinePhone,
       mobilePhone,
       zipCode,
+      medicalSpeciality,
     };
 
     const { data } = await this.doctorZipCodeProvider.getZipCode(body.zipCode);
@@ -89,10 +91,12 @@ export class DoctorService {
       medicalSpeciality,
     };
 
-    const person = await this.doctorRepository.findOne({ where: { id } }); // Criar uma função Reutilizável
+    const hasDoctorId = await this.doctorRepository.findOne({
+      where: { id },
+    }); // Criar uma função Reutilizável
 
-    if (!person)
-      throw new NotFoundException(`we couldn't find a doctor with id ${id}`);
+    if (!hasDoctorId)
+      throw new NotFoundException(`we couldn't find a doctor with id: ${id}`);
 
     await this.doctorRepository.update({ id }, body);
 
@@ -102,13 +106,15 @@ export class DoctorService {
   }
 
   public async delete(id: number): Promise<string> {
-    const person = await this.doctorRepository.findOne({ where: { id } });
+    const hasDoctorId = await this.doctorRepository.findOne({
+      where: { id },
+    });
 
-    if (!person)
-      throw new NotFoundException(`we couldn't find a doctor with id ${id}`);
+    if (!hasDoctorId)
+      throw new NotFoundException(`we couldn't find a doctor with id: ${id}`);
 
     await this.doctorRepository.delete({ id });
 
-    return `the doctor with the id ${id} was successfully deleted!`;
+    return `the doctor with the id '${id}' was successfully deleted!`;
   }
 }

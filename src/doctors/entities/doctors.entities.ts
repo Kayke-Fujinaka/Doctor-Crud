@@ -38,7 +38,9 @@ export class Doctor {
   @IsNumberString()
   zipCode: string;
 
-  @ManyToMany(() => Speciality)
+  @ManyToMany(() => Speciality, (speciality) => speciality.name, {
+    cascade: true,
+  })
   @JoinTable()
   medicalSpeciality: Speciality[];
 

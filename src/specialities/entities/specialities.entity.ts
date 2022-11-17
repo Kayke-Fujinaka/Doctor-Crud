@@ -1,5 +1,12 @@
 import { IsString } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Doctor } from 'src/doctors/entities/doctors.entities';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Speciality {
@@ -9,4 +16,10 @@ export class Speciality {
   @Column()
   @IsString()
   name: string;
+
+  @ManyToMany(() => Doctor, {
+    cascade: true,
+  })
+  @JoinTable()
+  doctor: Doctor;
 }
