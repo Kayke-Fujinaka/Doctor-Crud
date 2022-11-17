@@ -1,60 +1,94 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateDoctorDto } from '../dtos/create-doctor.dto';
-import { UpdateDoctorInfoDto } from '../dtos/update-doctor.dto';
-import { Doctor } from '../entities/doctor.entities';
-const axios = require('axios');
+import { CreateDoctorDto } from '../dtos/create-doctors.dto';
+import { UpdateDoctorInfoDto } from '../dtos/update-doctors.dto';
+import { Doctor } from '../entities/doctors.entities';
+//const axios = require('axios');
+import { DoctorZipCodeProvider } from '../providers/doctors-zipcode-provider';
 
 @Injectable()
 export class DoctorService {
   constructor(
+    private readonly doctorZipCodeProvider: DoctorZipCodeProvider,
     @InjectRepository(Doctor)
     private readonly doctorRepository: Repository<Doctor>,
   ) {}
 
-  public async create(
-    body: CreateDoctorDto,
-  ): Promise<{ data: Doctor | string }> {
-    try {
-      await axios.get(`https://viacep.com.br/ws/${body.zipCode}/json/`);
-      const doctorCreated = await this.doctorRepository.save(body);
-      return { data: doctorCreated };
-    } catch (error) {
-      return { data: 'CEP inválido' };
+  public async create(body: CreateDoctorDto): Promise<Doctor | string> {
+    const { crm } = body;
+
+    const { data } = await this.doctorZipCodeProvider.getZipCode(body.zipCode);
+
+    const normalizeAddressData = {
+      address: {
+        street: data.logradouro,
+        complement: data.complemento,
+        district: data.bairro,
+        city: data.localidade,
+        state: data.uf,
+      },
+    };
+
+    const isDoctorExists = await this.doctorRepository.findOne({
+      where: { crm },
+    });
+
+    if (isDoctorExists) {
+      throw new ConflictException('CRM já cadastrado');
     }
+
+    const doctorCreated = this.doctorRepository.save(
+      Object.assign(body, normalizeAddressData),
+    );
+
+    return doctorCreated;
   }
 
-  public async readAll(): Promise<{ doctors: Doctor[] }> {
-    const list = await this.doctorRepository.find();
-    return { doctors: list };
+  public readAll(): Promise<Doctor[]> {
+    return this.doctorRepository.find();
   }
 
-  public async readById(id: number): Promise<{ data: Doctor }> {
-    const doctor = await this.doctorRepository.findOne({ where: { id } });
-    return { data: doctor };
+  public readById(id: number): Promise<Doctor> {
+    return this.doctorRepository.findOne({ where: { id } });
   }
 
   public async update(
     id: number,
-    body: UpdateDoctorInfoDto,
-  ): Promise<{ data: Doctor | string }> {
-    try {
-      const person = await this.doctorRepository.findOne({ where: { id } });
+    {
+      name,
+      landlinePhone,
+      mobilePhone,
+      zipCode,
+      medicalSpecialty,
+    }: UpdateDoctorInfoDto,
+  ): Promise<Doctor | string> {
+    const body = {
+      name,
+      landlinePhone,
+      mobilePhone,
+      zipCode,
+      medicalSpecialty,
+    };
 
-      if (!person)
-        throw new NotFoundException(`Não achamos um doutor com o id ${id}`);
+    const person = await this.doctorRepository.findOne({ where: { id } });
 
-      await this.doctorRepository.update({ id }, body);
+    if (!person)
+      throw new NotFoundException(`Não achamos um doutor com o id ${id}`);
 
-      return { data: await this.doctorRepository.findOne({ where: { id } }) };
-    } catch (error) {
-      return { data: 'CEP inválido' };
-    }
+    await this.doctorRepository.update({ id }, body);
+
+    await this.doctorZipCodeProvider.getZipCode(zipCode);
+
+    return this.doctorRepository.findOne({ where: { id } });
   }
 
-  public async delete(id: number): Promise<{ data: string }> {
+  public async delete(id: number): Promise<string> {
     const person = await this.doctorRepository.findOne({ where: { id } });
 
     if (!person)
@@ -62,6 +96,6 @@ export class DoctorService {
 
     await this.doctorRepository.delete({ id });
 
-    return { data: `A pessoa com o id ${id} foi deletada com sucesso!!!` };
+    return `A pessoa com o id ${id} foi deletada com sucesso!!!`;
   }
 }

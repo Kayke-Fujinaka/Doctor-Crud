@@ -1,9 +1,9 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DoctorController } from './doctor.controller';
-import { Doctor } from './entities/doctor.entities';
-import { DoctorZipCodeProvider } from './providers/doctor-zipcode-provider';
+import { DoctorController } from './doctors.controller';
+import { Doctor } from './entities/doctors.entities';
+import { DoctorZipCodeProvider } from './providers/doctors-zipcode-provider';
 import { DoctorService } from './services/doctor.service';
 
 @Module({
