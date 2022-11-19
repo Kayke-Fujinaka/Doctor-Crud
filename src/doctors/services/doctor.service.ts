@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Speciality } from 'src/specialties/entities/specialities.entity';
+import { Speciality } from 'src/specialties/entities/specialties.entity';
 import { getRepository, In, Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dtos/create-doctors.dto';
 import { UpdateDoctorInfoDto } from '../dtos/update-doctors.dto';
