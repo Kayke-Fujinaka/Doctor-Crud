@@ -5,7 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Speciality } from 'src/specialities/entities/specialities.entity';
+import { getRepository, In, Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dtos/create-doctors.dto';
 import { UpdateDoctorInfoDto } from '../dtos/update-doctors.dto';
 import { Doctor } from '../entities/doctors.entities';
@@ -29,13 +30,21 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
     zipCode,
     medicalSpeciality,
   }: CreateDoctorDto): Promise<Doctor | string> {
+    const specialties = await this.findSpecialtiesInSpecialityRepository(
+      medicalSpeciality,
+    );
+
+    if (specialties.length < 2) {
+      return 'enter only valid specialties';
+    }
+
     const body = {
       name,
       crm,
       landlinePhone,
       mobilePhone,
       zipCode,
-      medicalSpeciality,
+      medicalSpeciality: specialties,
     };
 
     const { data } = await this.doctorZipCodeProvider.getZipCode(body.zipCode);
@@ -65,18 +74,30 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
     return doctorCreated;
   }
 
-  public readAll(): Promise<Doctor[]> {
-    return this.doctorRepository.find({
-      relations: ['medicalSpeciality'],
+  public async findSpecialtiesInSpecialityRepository(arrayWithSpecialtiesId) {
+    return getRepository(Speciality).find({
+      where: {
+        id: In(arrayWithSpecialtiesId),
+      },
     });
   }
 
-  public async filterDoctor(searchByAttr: string): Promise<Doctor[]> {
-    return this.doctorRepository
-      .createQueryBuilder('doctor')
-      .where(searchByAttr)
-      .select('doctor')
-      .getMany();
+  public readAll(): Promise<Doctor[]> {
+    return this.doctorRepository.find({ relations: ['medicalSpeciality'] });
+  }
+
+  public async filterDoctor(searchByAttr: string): Promise<Doctor[] | string> {
+    try {
+      return await this.doctorRepository
+        .createQueryBuilder('doctor')
+        .leftJoinAndSelect('doctor.medicalSpeciality', 'medicalSpeciality')
+        .where(searchByAttr)
+        .getMany();
+    } catch (error) {
+      throw new NotFoundException(
+        `we couldn't find atributte(s): ${searchByAttr}`,
+      );
+    }
   }
 
   public async update(

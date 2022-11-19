@@ -7,7 +7,7 @@ import { DoctorZipCodeProvider } from './providers/doctors-zipcode-provider';
 import { DoctorService } from './services/doctor.service';
 
 @Module({
-  imports: [HttpModule, TypeOrmModule.forFeature([Doctor])],
+  imports: [HttpModule, DoctorModule, TypeOrmModule.forFeature([Doctor])],
   controllers: [DoctorController],
   providers: [DoctorService, DoctorZipCodeProvider],
 })

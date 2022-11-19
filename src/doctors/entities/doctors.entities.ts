@@ -38,10 +38,8 @@ export class Doctor {
   @IsNumberString()
   zipCode: string;
 
-  @ManyToMany(() => Speciality, (speciality) => speciality.name, {
-    cascade: true,
-  })
-  @JoinTable()
+  @ManyToMany(() => Speciality, (medicalSpeciality) => medicalSpeciality)
+  @JoinTable({ name: 'doctor_specialties' })
   medicalSpeciality: Speciality[];
 
   @DeleteDateColumn()

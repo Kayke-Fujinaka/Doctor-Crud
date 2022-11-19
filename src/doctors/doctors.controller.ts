@@ -21,7 +21,7 @@ export class DoctorController {
   @Post('/')
   @HttpCode(201)
   public async create(@Body() body: CreateDoctorDto): Promise<Doctor | string> {
-    return await this.doctorService.create(body);
+    return this.doctorService.create(body);
   }
 
   @Get('/')
@@ -30,7 +30,9 @@ export class DoctorController {
   }
 
   @Get('/filter')
-  public async filter(@Query() searchByAttr: string): Promise<Doctor[]> {
+  public async filter(
+    @Query() searchByAttr: string,
+  ): Promise<Doctor[] | string> {
     return this.doctorService.filterDoctor(searchByAttr);
   }
 
