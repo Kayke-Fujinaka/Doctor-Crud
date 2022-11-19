@@ -1,5 +1,5 @@
 import { IsNumberString, IsString, MaxLength } from 'class-validator';
-import { Speciality } from 'src/specialities/entities/specialities.entity';
+import { Speciality } from 'src/specialties/entities/specialities.entity';
 import {
   Column,
   DeleteDateColumn,
