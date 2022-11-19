@@ -1,10 +1,4 @@
-import { DataSourceOptions } from 'typeorm';
-
-type configProps = DataSourceOptions & {
-  autoLoadEntities: boolean;
-};
-
-export const config: configProps = {
+export const config = {
   database: './db.sql',
   type: 'sqlite',
   synchronize: true,
