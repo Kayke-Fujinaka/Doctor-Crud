@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsString, MaxLength } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -8,5 +8,6 @@ export class Speciality {
 
   @Column()
   @IsString()
+  @MaxLength(120)
   name: string;
 }
