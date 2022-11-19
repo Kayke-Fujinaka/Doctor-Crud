@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { CreateSpecialtyDto } from './dtos/create-specialty.dto';
-import { UpdateSpecialtyInformationDto } from './dtos/update-speciality.dto';
+import { UpdateSpecialtyInformationDto } from './dtos/update-specialty.dto';
 import { Speciality } from './entities/specialities.entity';
 import { SpecialitiesService } from './services/specialities.service';
 
