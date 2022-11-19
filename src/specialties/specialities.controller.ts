@@ -10,7 +10,7 @@ import {
 import { CreateSpecialtyDto } from './dtos/create-specialty.dto';
 import { UpdateSpecialtyInformationDto } from './dtos/update-specialty.dto';
 import { Speciality } from './entities/specialties.entity';
-import { SpecialitiesService } from './services/specialities.service';
+import { SpecialitiesService } from './services/specialties.service';
 
 @Controller('specialities')
 export class SpecialitiesController {
