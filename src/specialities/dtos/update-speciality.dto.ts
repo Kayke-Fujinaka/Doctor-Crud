@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateSpecialityInfoDto {
+export class UpdateSpecialtyInformationDto {
   @IsNotEmpty()
   @IsString()
-  name: string;
+  name?: string;
 }

@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { CreateSpecialityDto } from './dtos/create-speciality.dto';
-import { UpdateSpecialityInfoDto } from './dtos/update-speciality.dto';
+import { UpdateSpecialtyInformationDto } from './dtos/update-speciality.dto';
 import { Speciality } from './entities/specialities.entity';
 import { SpecialitiesService } from './services/specialities.service';
 
@@ -30,7 +30,7 @@ export class SpecialitiesController {
   public async update(
     @Param('id')
     id: string,
-    @Body() { name }: UpdateSpecialityInfoDto,
+    @Body() { name }: UpdateSpecialtyInformationDto,
   ): Promise<Speciality | string> {
     return this.SpecialitiesService.update(id, name);
   }
