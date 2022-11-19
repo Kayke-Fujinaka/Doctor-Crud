@@ -9,4 +9,4 @@ import { SpecialitiesController } from './specialities.controller';
   controllers: [SpecialitiesController],
   providers: [SpecialitiesService],
 })
-export class SpecialitiesModule {}
+export class SpecialtiesModule {}
