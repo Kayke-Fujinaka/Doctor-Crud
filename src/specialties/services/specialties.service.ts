@@ -5,46 +5,46 @@ import { CreateSpecialtyDto } from '../dtos/create-specialty.dto';
 import { Speciality } from '../entities/specialties.entity';
 
 @Injectable()
-export class SpecialitiesService {
+export class SpecialtiesService {
   constructor(
     @InjectRepository(Speciality)
-    private readonly specialityRepository: Repository<Speciality>,
+    private readonly specialtyRepository: Repository<Speciality>,
   ) {}
 
   public async create(body: CreateSpecialtyDto): Promise<Speciality> {
-    const specialitiesCreated = this.specialityRepository.create(body);
-    return this.specialityRepository.save(specialitiesCreated);
+    const specialitiesCreated = this.specialtyRepository.create(body);
+    return this.specialtyRepository.save(specialitiesCreated);
   }
 
   public async readAll(): Promise<Speciality[]> {
-    return this.specialityRepository.find();
+    return this.specialtyRepository.find();
   }
 
   public async update(id: string, name: string): Promise<Speciality | string> {
-    const hasSpecialityId = await this.specialityRepository.findOne({
+    const hasSpecialtyId = await this.specialtyRepository.findOne({
       where: { id },
     }); // Criar uma função Reutilizável
 
-    if (!hasSpecialityId)
+    if (!hasSpecialtyId)
       throw new NotFoundException(`we couldn't find a doctor with id: ${id}`);
 
-    await this.specialityRepository.update({ id }, { name });
+    await this.specialtyRepository.update({ id }, { name });
 
-    return this.specialityRepository.findOne({ where: { id } });
+    return this.specialtyRepository.findOne({ where: { id } });
   }
 
   public async delete(id: string): Promise<string> {
-    const hasSpeciality = await this.specialityRepository.findOne({
+    const hasSpecialty = await this.specialtyRepository.findOne({
       where: { id },
     });
 
-    if (!hasSpeciality)
+    if (!hasSpecialty)
       throw new NotFoundException(
-        `we couldn't find a speciality with id: ${id}`,
+        `we couldn't find a specialty with id: ${id}`,
       );
 
-    await this.specialityRepository.delete({ id });
+    await this.specialtyRepository.delete({ id });
 
-    return `the speciality with the id '${id}' was successfully deleted!`;
+    return `the specialty with the id '${id}' was successfully deleted!`;
   }
 }

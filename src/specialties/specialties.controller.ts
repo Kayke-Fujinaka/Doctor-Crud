@@ -10,20 +10,20 @@ import {
 import { CreateSpecialtyDto } from './dtos/create-specialty.dto';
 import { UpdateSpecialtyInformationDto } from './dtos/update-specialty.dto';
 import { Speciality } from './entities/specialties.entity';
-import { SpecialitiesService } from './services/specialties.service';
+import { SpecialtiesService } from './services/specialties.service';
 
-@Controller('specialities')
+@Controller('specialties')
 export class SpecialtiesController {
-  constructor(private readonly SpecialitiesService: SpecialitiesService) {}
+  constructor(private readonly specialtiesService: SpecialtiesService) {}
 
   @Post('/')
   public async create(@Body() body: CreateSpecialtyDto): Promise<Speciality> {
-    return this.SpecialitiesService.create(body);
+    return this.specialtiesService.create(body);
   }
 
   @Get('/')
   public async readAll(): Promise<Speciality[]> {
-    return this.SpecialitiesService.readAll();
+    return this.specialtiesService.readAll();
   }
 
   @Patch(':id')
@@ -32,11 +32,11 @@ export class SpecialtiesController {
     id: string,
     @Body() { name }: UpdateSpecialtyInformationDto,
   ): Promise<Speciality | string> {
-    return this.SpecialitiesService.update(id, name);
+    return this.specialtiesService.update(id, name);
   }
 
   @Delete(':id')
   public async delete(@Param('id') id: string): Promise<string> {
-    return this.SpecialitiesService.delete(id);
+    return this.specialtiesService.delete(id);
   }
 }
