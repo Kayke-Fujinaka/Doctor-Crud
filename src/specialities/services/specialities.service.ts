@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateSpecialityDto } from '../dtos/create-speciality.dto';
+import { CreateSpecialtyDto } from '../dtos/create-speciality.dto';
 import { Speciality } from '../entities/specialities.entity';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class SpecialitiesService {
     private readonly specialityRepository: Repository<Speciality>,
   ) {}
 
-  public async create(body: CreateSpecialityDto): Promise<Speciality> {
+  public async create(body: CreateSpecialtyDto): Promise<Speciality> {
     const specialitiesCreated = this.specialityRepository.create(body);
     return this.specialityRepository.save(specialitiesCreated);
   }

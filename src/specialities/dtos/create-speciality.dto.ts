@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-export class CreateSpecialityDto {
+export class CreateSpecialtyDto {
   @IsNotEmpty()
   @IsString()
+  @MaxLength(120)
   name: string;
 }

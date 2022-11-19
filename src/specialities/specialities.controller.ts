@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateSpecialityDto } from './dtos/create-speciality.dto';
+import { CreateSpecialtyDto } from './dtos/create-speciality.dto';
 import { UpdateSpecialtyInformationDto } from './dtos/update-speciality.dto';
 import { Speciality } from './entities/specialities.entity';
 import { SpecialitiesService } from './services/specialities.service';
@@ -17,7 +17,7 @@ export class SpecialitiesController {
   constructor(private readonly SpecialitiesService: SpecialitiesService) {}
 
   @Post('/')
-  public async create(@Body() body: CreateSpecialityDto): Promise<Speciality> {
+  public async create(@Body() body: CreateSpecialtyDto): Promise<Speciality> {
     return this.SpecialitiesService.create(body);
   }
 
