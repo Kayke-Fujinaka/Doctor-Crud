@@ -13,7 +13,7 @@ import { Speciality } from './entities/specialties.entity';
 import { SpecialitiesService } from './services/specialties.service';
 
 @Controller('specialities')
-export class SpecialitiesController {
+export class SpecialtiesController {
   constructor(private readonly SpecialitiesService: SpecialitiesService) {}
 
   @Post('/')
