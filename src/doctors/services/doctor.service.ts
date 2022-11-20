@@ -1,10 +1,13 @@
 import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import {
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AxiosError } from 'axios';
 import { Speciality } from 'src/specialties/entities/specialties.entity';
 import { getRepository, In, Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dtos/create-doctors.dto';
@@ -22,64 +25,36 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
     super(doctorRepository, { useSoftDelete: true });
   }
 
-  public async create({
-    name,
-    crm,
-    landlinePhone,
-    mobilePhone,
-    zipCode,
-    medicalSpeciality,
-  }: CreateDoctorDto): Promise<Doctor | string> {
-    const specialties = await this.findSpecialtiesInSpecialityRepository(
+  public async create(createDoctor: CreateDoctorDto): Promise<Doctor> {
+    const { crm, medicalSpeciality, zipCode } = createDoctor;
+
+    const specialties = await this.findSpecialtiesInTheSpecialityRepo(
       medicalSpeciality,
     );
 
-    if (specialties.length < 2) {
-      return 'enter only valid specialties';
-    }
-
-    const body = {
-      name,
-      crm,
-      landlinePhone,
-      mobilePhone,
-      zipCode,
+    const createDoctorData = {
+      ...createDoctor,
       medicalSpeciality: specialties,
     };
 
-    const { data } = await this.doctorZipCodeProvider.getZipCode(body.zipCode);
+    const { data } = await this.doctorZipCodeProvider.getZipCode(zipCode);
 
-    const normalizeAddressData = {
-      address: {
-        street: data.logradouro,
-        complement: data.complemento,
-        district: data.bairro,
-        city: data.localidade,
-        state: data.uf,
-      },
+    const addressData = {
+      zipCode,
+      street: data.logradouro,
+      complement: data.complemento,
+      district: data.bairro,
+      city: data.localidade,
+      state: data.uf,
     };
 
-    const isDoctorExists = await this.doctorRepository.findOne({
-      where: { crm },
-    });
-
-    if (isDoctorExists) {
-      throw new ConflictException('crm is already registered');
-    }
+    await this.doctorAlreadyExists(crm);
 
     const doctorCreated = this.doctorRepository.save(
-      Object.assign(body, normalizeAddressData),
+      Object.assign(createDoctorData, addressData),
     );
 
     return doctorCreated;
-  }
-
-  public async findSpecialtiesInSpecialityRepository(arrayWithSpecialtiesId) {
-    return getRepository(Speciality).find({
-      where: {
-        id: In(arrayWithSpecialtiesId),
-      },
-    });
   }
 
   public readAll(): Promise<Doctor[]> {
@@ -103,45 +78,88 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
   public async update(
     id: number,
     {
-      name,
+      medicalSpeciality,
+      zipCode,
       landlinePhone,
       mobilePhone,
-      zipCode,
-      medicalSpeciality,
+      name,
     }: UpdateDoctorInfoDto,
-  ): Promise<Doctor | string> {
-    const body = {
+  ): Promise<Doctor> {
+    const doctorUpdated = await this.doctorRepository.findOne(id, {
+      relations: ['medicalSpeciality'],
+    });
+
+    const specialties = await this.findSpecialtiesInTheSpecialityRepo(
+      medicalSpeciality,
+    );
+
+    const { data } = await this.doctorZipCodeProvider.getZipCode(zipCode);
+
+    const dataUpdated = {
+      ...doctorUpdated,
       name,
       landlinePhone,
       mobilePhone,
-      zipCode,
-      medicalSpeciality,
+      medicalSpeciality: specialties,
+      street: data.logradouro,
+      complement: data.complemento,
+      district: data.bairro,
+      city: data.localidade,
+      state: data.uf,
     };
 
-    const hasDoctorId = await this.doctorRepository.findOne({
-      where: { id },
-    }); // Criar uma função Reutilizável
+    const user = await this.doctorRepository.save(dataUpdated);
 
-    if (!hasDoctorId)
-      throw new NotFoundException(`we couldn't find a doctor with id: ${id}`);
-
-    await this.doctorRepository.update({ id }, body);
-
-    await this.doctorZipCodeProvider.getZipCode(zipCode);
-
-    return this.doctorRepository.findOne({ where: { id } });
+    return user;
   }
 
   public async delete(id: number): Promise<string> {
-    const hasDoctorId = await this.doctorRepository.findOne({
-      where: { id },
-    });
-
-    if (!hasDoctorId)
-      throw new NotFoundException(`we couldn't find a doctor with id: ${id}`);
+    await this.findDoctorById(id);
 
     await this.doctorRepository.delete({ id });
 
     return `the doctor with the id '${id}' was successfully deleted!`;
+  }
+
+  public async findSpecialtiesInTheSpecialityRepo(arrayWithSpecialtiesId) {
+    const specialties = await getRepository(Speciality).find({
+      where: {
+        id: In(arrayWithSpecialtiesId),
+      },
+    });
+
+    if (specialties.length < 2) {
+      throw new HttpException(
+        'enter two valid specialties',
+        HttpStatus.LENGTH_REQUIRED,
+      );
+    }
+
+    return specialties;
+  }
+
+  public async doctorAlreadyExists(crm: string) {
+    const isDoctorExists = this.doctorRepository.findOne({
+      where: { crm },
+    });
+
+    if (isDoctorExists) {
+      throw new ConflictException('crm is already registered');
+    }
+
+    return isDoctorExists;
+  }
+
+  public async findDoctorById(id: number): Promise<Speciality | AxiosError> {
+    const hasDoctorById = await this.doctorRepository.findOne({
+      where: { id },
+      relations: ['medicalSpeciality'],
+    });
+
+    if (!hasDoctorById) {
+      throw new NotFoundException(`we couldn't find a doctor with id: ${id}`);
+    }
+
+    return hasDoctorById;
   }
 }

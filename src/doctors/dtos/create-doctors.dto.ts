@@ -1,5 +1,6 @@
 import {
   ArrayMinSize,
+  ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
   IsNumberString,
@@ -35,5 +36,6 @@ export class CreateDoctorDto {
 
   @IsArray()
   @ArrayMinSize(2)
+  @ArrayNotEmpty()
   medicalSpeciality: Speciality[];
 }

@@ -41,7 +41,7 @@ export class DoctorController {
     @Param('id')
     id: number,
     @Body() body: UpdateDoctorInfoDto,
-  ): Promise<Doctor | string> {
+  ) {
     return this.doctorService.update(id, body);
   }
 

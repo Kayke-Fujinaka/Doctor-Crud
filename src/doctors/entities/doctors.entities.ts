@@ -38,6 +38,26 @@ export class Doctor {
   @IsNumberString()
   zipCode: string;
 
+  @Column()
+  @IsString()
+  street: string;
+
+  @Column()
+  @IsString()
+  complement: string;
+
+  @Column()
+  @IsString()
+  district: string;
+
+  @Column()
+  @IsString()
+  city: string;
+
+  @Column()
+  @IsString()
+  state: string;
+
   @ManyToMany(() => Speciality, (medicalSpeciality) => medicalSpeciality)
   @JoinTable({ name: 'doctor_specialties' })
   medicalSpeciality: Speciality[];
