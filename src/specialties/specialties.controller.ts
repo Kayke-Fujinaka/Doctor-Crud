@@ -29,14 +29,14 @@ export class SpecialtiesController {
   @Patch(':id')
   public async update(
     @Param('id')
-    id: string,
-    @Body() { name }: UpdateSpecialtyInformationDto,
+    id: number,
+    @Body() name: UpdateSpecialtyInformationDto,
   ): Promise<Speciality | string> {
     return this.specialtiesService.update(id, name);
   }
 
   @Delete(':id')
-  public async delete(@Param('id') id: string): Promise<string> {
+  public async delete(@Param('id') id: number): Promise<string> {
     return this.specialtiesService.delete(id);
   }
 }

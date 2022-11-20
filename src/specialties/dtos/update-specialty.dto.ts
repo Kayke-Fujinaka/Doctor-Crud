@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class UpdateSpecialtyInformationDto {
-  @IsNotEmpty()
   @IsString()
+  @MaxLength(120)
+  @IsOptional()
   name?: string;
 }

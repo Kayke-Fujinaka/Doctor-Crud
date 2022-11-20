@@ -1,10 +1,11 @@
-import { IsString, MaxLength } from 'class-validator';
+import { IsNumber, IsString, MaxLength } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Speciality {
-  @PrimaryGeneratedColumn()
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  @IsNumber()
+  id: number;
 
   @Column()
   @IsString()
