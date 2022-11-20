@@ -28,6 +28,8 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
   public async create(createDoctor: CreateDoctorDto): Promise<Doctor> {
     const { crm, medicalSpeciality, zipCode } = createDoctor;
 
+    await this.doctorAlreadyExists(crm);
+
     const specialties = await this.findSpecialtiesInTheSpecialityRepo(
       medicalSpeciality,
     );
@@ -48,8 +50,6 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
       state: data.uf,
     };
 
-    await this.doctorAlreadyExists(crm);
-
     const doctorCreated = this.doctorRepository.save(
       Object.assign(createDoctorData, addressData),
     );
@@ -69,8 +69,9 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
         .where(searchByAttr)
         .getMany();
     } catch (error) {
-      throw new NotFoundException(
-        `we couldn't find atributte(s): ${searchByAttr}`,
+      throw new HttpException(
+        `we couldn't find atributte(s)`,
+        HttpStatus.NOT_FOUND,
       );
     }
   }
@@ -85,9 +86,7 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
       name,
     }: UpdateDoctorInfoDto,
   ): Promise<Doctor> {
-    const doctorUpdated = await this.doctorRepository.findOne(id, {
-      relations: ['medicalSpeciality'],
-    });
+    const doctorUpdated = await this.findDoctorById(id);
 
     const specialties = await this.findSpecialtiesInTheSpecialityRepo(
       medicalSpeciality,
@@ -108,9 +107,7 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
       state: data.uf,
     };
 
-    const user = await this.doctorRepository.save(dataUpdated);
-
-    return user;
+    return this.doctorRepository.save(dataUpdated);
   }
 
   public async delete(id: number): Promise<string> {
