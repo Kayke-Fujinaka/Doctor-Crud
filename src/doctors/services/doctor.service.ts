@@ -28,7 +28,13 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
   public async create(createDoctor: CreateDoctorDto): Promise<Doctor> {
     const { crm, medicalSpeciality, zipCode } = createDoctor;
 
-    await this.doctorAlreadyExists(crm);
+    const isDoctorExists = await this.doctorRepository.findOne({
+      where: { crm },
+    });
+
+    if (isDoctorExists) {
+      throw new ConflictException('crm is already registered');
+    }
 
     const specialties = await this.findSpecialtiesInTheSpecialityRepo(
       medicalSpeciality,
@@ -133,18 +139,6 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
     }
 
     return specialties;
-  }
-
-  public async doctorAlreadyExists(crm: string) {
-    const isDoctorExists = this.doctorRepository.findOne({
-      where: { crm },
-    });
-
-    if (isDoctorExists) {
-      throw new ConflictException('crm is already registered');
-    }
-
-    return isDoctorExists;
   }
 
   public async findDoctorById(id: number): Promise<Speciality | AxiosError> {
