@@ -1,4 +1,4 @@
-import { IsOptional, MaxLength } from 'class-validator';
+import { ArrayMinSize, IsOptional, MaxLength } from 'class-validator';
 import { Speciality } from 'src/specialties/entities/specialties.entity';
 
 export class UpdateDoctorInfoDto {
@@ -7,10 +7,11 @@ export class UpdateDoctorInfoDto {
   name?: string;
 
   @IsOptional()
-  @MaxLength(7)
+  @MaxLength(15)
   landlinePhone?: string;
 
   @IsOptional()
+  @MaxLength(15)
   mobilePhone?: string;
 
   @IsOptional()
@@ -32,5 +33,6 @@ export class UpdateDoctorInfoDto {
   state?: string;
 
   @IsOptional()
+  @ArrayMinSize(2)
   medicalSpeciality?: Speciality[];
 }

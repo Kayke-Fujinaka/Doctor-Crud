@@ -119,7 +119,7 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
   public async delete(id: number): Promise<string> {
     await this.findDoctorById(id);
 
-    await this.doctorRepository.delete({ id });
+    await this.doctorRepository.softDelete({ id });
 
     return `the doctor with the id '${id}' was successfully deleted!`;
   }
