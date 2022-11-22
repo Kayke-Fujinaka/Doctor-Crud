@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AxiosError } from 'axios';
 import { UpdateDoctorInfoDto } from 'src/doctors/dtos/update-doctors.dto';
+import { IResponseMessage } from 'src/interfaces/responseMessage';
 import { Repository } from 'typeorm';
 import { CreateSpecialtyDto } from '../dtos/create-specialty.dto';
 import { Speciality } from '../entities/specialties.entity';
@@ -32,12 +33,15 @@ export class SpecialtiesService {
     return this.specialtyRepository.findOne({ where: { id } });
   }
 
-  public async delete(id: number): Promise<string> {
+  public async delete(id: number): Promise<IResponseMessage> {
     await this.findSpecialtyById(id);
 
     await this.specialtyRepository.delete(id);
 
-    return `the specialty with the id ${id} was deleted!`;
+    return {
+      statusCode: 202,
+      message: `the specialty with the id ${id} was deleted!`,
+    };
   }
 
   public async findSpecialtyById(id: number): Promise<Speciality | AxiosError> {

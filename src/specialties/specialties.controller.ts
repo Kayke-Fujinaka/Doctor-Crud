@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { IResponseMessage } from 'src/interfaces/responseMessage';
 import { CreateSpecialtyDto } from './dtos/create-specialty.dto';
 import { UpdateSpecialtyInformationDto } from './dtos/update-specialty.dto';
 import { Speciality } from './entities/specialties.entity';
@@ -36,7 +37,7 @@ export class SpecialtiesController {
   }
 
   @Delete(':id')
-  public async delete(@Param('id') id: number): Promise<string> {
+  public async delete(@Param('id') id: number): Promise<IResponseMessage> {
     return this.specialtiesService.delete(id);
   }
 }

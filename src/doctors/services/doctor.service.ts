@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AxiosError } from 'axios';
+import { IResponseMessage } from 'src/interfaces/responseMessage';
 import { Speciality } from 'src/specialties/entities/specialties.entity';
 import { getRepository, In, Repository } from 'typeorm';
 import { CreateDoctorDto } from '../dtos/create-doctors.dto';
@@ -114,12 +115,15 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
     return this.doctorRepository.save(updatedDoctorInfo);
   }
 
-  public async delete(id: number): Promise<string> {
+  public async delete(id: number): Promise<IResponseMessage> {
     await this.findDoctorById(id);
 
     await this.doctorRepository.softDelete({ id });
 
-    return `the doctor with the id '${id}' was successfully deleted!`;
+    return {
+      statusCode: 202,
+      message: `the doctor with the id '${id}' was successfully deleted!`,
+    };
   }
 
   public async findSpecialties(arrayWithSpecialtiesId: Speciality[]) {
