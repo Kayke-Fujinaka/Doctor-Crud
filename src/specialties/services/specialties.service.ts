@@ -14,8 +14,7 @@ export class SpecialtiesService {
   ) {}
 
   public async create(body: CreateSpecialtyDto): Promise<Speciality> {
-    const specialty = this.specialtyRepository.create(body);
-    return this.specialtyRepository.save(specialty);
+    return this.specialtyRepository.save(body);
   }
 
   public async readAll(): Promise<Speciality[]> {

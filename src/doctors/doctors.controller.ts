@@ -31,7 +31,7 @@ export class DoctorController {
 
   @Get('/filter')
   public async filter(
-    @Query() searchByAttr: string,
+    @Query() searchByAttr: { queryParams: string | number[] },
   ): Promise<Doctor[] | string> {
     return this.doctorService.filter(searchByAttr);
   }

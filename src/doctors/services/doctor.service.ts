@@ -65,7 +65,9 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
     return this.doctorRepository.find({ relations: ['medicalSpeciality'] });
   }
 
-  public async filter(searchByAttr: string): Promise<Doctor[] | string> {
+  public async filter(searchByAttr: {
+    queryParams: string | number[];
+  }): Promise<Doctor[] | string> {
     try {
       return await this.doctorRepository
         .createQueryBuilder('doctor')
@@ -120,7 +122,7 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
     return `the doctor with the id '${id}' was successfully deleted!`;
   }
 
-  public async findSpecialties(arrayWithSpecialtiesId) {
+  public async findSpecialties(arrayWithSpecialtiesId: Speciality[]) {
     const specialties = await getRepository(Speciality).find({
       where: {
         id: In(arrayWithSpecialtiesId),
