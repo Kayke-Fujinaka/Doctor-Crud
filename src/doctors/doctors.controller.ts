@@ -33,7 +33,7 @@ export class DoctorController {
   public async filter(
     @Query() searchByAttr: string,
   ): Promise<Doctor[] | string> {
-    return this.doctorService.filterDoctor(searchByAttr);
+    return this.doctorService.filter(searchByAttr);
   }
 
   @Patch(':id')

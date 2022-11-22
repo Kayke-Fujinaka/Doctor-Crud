@@ -15,6 +15,8 @@ import { UpdateDoctorInfoDto } from '../dtos/update-doctors.dto';
 import { Doctor } from '../entities/doctors.entities';
 import { DoctorZipCodeProvider } from '../providers/doctors-zipcode-provider';
 
+const SPECIALTIES_REQUIRED = 2;
+
 @Injectable()
 export class DoctorService extends TypeOrmQueryService<Doctor> {
   constructor(
@@ -28,17 +30,15 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
   public async create(createDoctor: CreateDoctorDto): Promise<Doctor> {
     const { crm, medicalSpeciality, zipCode } = createDoctor;
 
-    const isDoctorExists = await this.doctorRepository.findOne({
+    const isDoctorAlreadyRegistered = await this.doctorRepository.findOne({
       where: { crm },
     });
 
-    if (isDoctorExists) {
+    if (isDoctorAlreadyRegistered) {
       throw new ConflictException('crm is already registered');
     }
 
-    const specialties = await this.findSpecialtiesInTheSpecialityRepo(
-      medicalSpeciality,
-    );
+    const specialties = await this.findSpecialties(medicalSpeciality);
 
     const createDoctorData = {
       ...createDoctor,
@@ -56,18 +56,16 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
       state: data.uf,
     };
 
-    const doctorCreated = this.doctorRepository.save(
+    return this.doctorRepository.save(
       Object.assign(createDoctorData, addressData),
     );
-
-    return doctorCreated;
   }
 
   public readAll(): Promise<Doctor[]> {
     return this.doctorRepository.find({ relations: ['medicalSpeciality'] });
   }
 
-  public async filterDoctor(searchByAttr: string): Promise<Doctor[] | string> {
+  public async filter(searchByAttr: string): Promise<Doctor[] | string> {
     try {
       return await this.doctorRepository
         .createQueryBuilder('doctor')
@@ -92,16 +90,14 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
       name,
     }: UpdateDoctorInfoDto,
   ): Promise<Doctor> {
-    const doctorUpdated = await this.findDoctorById(id);
+    const doctor = await this.findDoctorById(id);
 
-    const specialties = await this.findSpecialtiesInTheSpecialityRepo(
-      medicalSpeciality,
-    );
+    const specialties = await this.findSpecialties(medicalSpeciality);
 
     const { data } = await this.doctorZipCodeProvider.getZipCode(zipCode);
 
-    const dataUpdated = {
-      ...doctorUpdated,
+    const updatedDoctorInfo = {
+      ...doctor,
       name,
       landlinePhone,
       mobilePhone,
@@ -113,7 +109,7 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
       state: data.uf,
     };
 
-    return this.doctorRepository.save(dataUpdated);
+    return this.doctorRepository.save(updatedDoctorInfo);
   }
 
   public async delete(id: number): Promise<string> {
@@ -124,14 +120,14 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
     return `the doctor with the id '${id}' was successfully deleted!`;
   }
 
-  public async findSpecialtiesInTheSpecialityRepo(arrayWithSpecialtiesId) {
+  public async findSpecialties(arrayWithSpecialtiesId) {
     const specialties = await getRepository(Speciality).find({
       where: {
         id: In(arrayWithSpecialtiesId),
       },
     });
 
-    if (specialties.length < 2) {
+    if (specialties.length < SPECIALTIES_REQUIRED) {
       throw new HttpException(
         'enter two valid specialties',
         HttpStatus.LENGTH_REQUIRED,
@@ -142,15 +138,15 @@ export class DoctorService extends TypeOrmQueryService<Doctor> {
   }
 
   public async findDoctorById(id: number): Promise<Speciality | AxiosError> {
-    const hasDoctorById = await this.doctorRepository.findOne({
+    const isDoctorAlreadyExists = await this.doctorRepository.findOne({
       where: { id },
       relations: ['medicalSpeciality'],
     });
 
-    if (!hasDoctorById) {
+    if (!isDoctorAlreadyExists) {
       throw new NotFoundException(`we couldn't find a doctor with id: ${id}`);
     }
 
-    return hasDoctorById;
+    return isDoctorAlreadyExists;
   }
 }
