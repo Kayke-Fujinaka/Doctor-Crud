@@ -1,4 +1,3 @@
-import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import {
   ConflictException,
   HttpException,
@@ -19,14 +18,12 @@ import { DoctorZipCodeProvider } from '../providers/doctors-zipcode-provider';
 const SPECIALTIES_REQUIRED = 2;
 
 @Injectable()
-export class DoctorService extends TypeOrmQueryService<Doctor> {
+export class DoctorService {
   constructor(
     private readonly doctorZipCodeProvider: DoctorZipCodeProvider,
     @InjectRepository(Doctor)
     private readonly doctorRepository: Repository<Doctor>,
-  ) {
-    super(doctorRepository, { useSoftDelete: true });
-  }
+  ) {}
 
   public async create(createDoctor: CreateDoctorDto): Promise<Doctor> {
     const { crm, medicalSpeciality, zipCode } = createDoctor;
