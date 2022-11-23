@@ -12,6 +12,7 @@ import {
 import { CreateDoctorDto } from 'src/doctors/dtos/create-doctors.dto';
 import { Doctor } from 'src/doctors/entities/doctors.entities';
 import { IResponseMessage } from 'src/interfaces/responseMessage';
+import { Speciality } from 'src/specialties/entities/specialties.entity';
 import { UpdateDoctorInfoDto } from './dtos/update-doctors.dto';
 import { DoctorService } from './services/doctor.service';
 
@@ -32,7 +33,7 @@ export class DoctorController {
 
   @Get('/filter')
   public async filter(
-    @Query() searchByAttr: { queryParams: string | number[] },
+    @Query() searchByAttr: { queryParams: string | Speciality[] },
   ): Promise<Doctor[] | string> {
     return this.doctorService.filter(searchByAttr);
   }

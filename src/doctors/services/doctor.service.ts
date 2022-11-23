@@ -64,7 +64,7 @@ export class DoctorService {
   }
 
   public async filter(searchByAttr: {
-    queryParams: string | number[];
+    queryParams: string | Speciality[];
   }): Promise<Doctor[] | string> {
     try {
       return await this.doctorRepository
