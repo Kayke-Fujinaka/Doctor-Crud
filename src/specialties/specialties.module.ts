@@ -1,12 +1,34 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Speciality } from './entities/specialties.entity';
-import { SpecialtiesService } from './services/specialties.service';
-import { SpecialtiesController } from './specialties.controller';
+
+import { SpecialtiesController } from '@shared/infra/http/controllers/specialties.controller';
+import { Specialty } from './infra/typeorm/entities/specialty.entity';
+import { SpecialtiesRepository } from './infra/typeorm/repositories/specialties.repository';
+import { ISpecialtiesRepository } from './interfaces';
+import {
+  CreateSpecialtyUseCase,
+  DeleteSpecialtyUseCase,
+  FilterByPropertiesUseCase,
+  FindAllSpecialtiesUseCase,
+  FindByNameUseCase,
+  UpdateSpecialtyUseCase,
+} from './use-cases';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Speciality])],
+  imports: [TypeOrmModule.forFeature([Specialty])],
   controllers: [SpecialtiesController],
-  providers: [SpecialtiesService],
+  providers: [
+    CreateSpecialtyUseCase,
+    FindAllSpecialtiesUseCase,
+    FindByNameUseCase,
+    FilterByPropertiesUseCase,
+    UpdateSpecialtyUseCase,
+    DeleteSpecialtyUseCase,
+    {
+      provide: ISpecialtiesRepository,
+      useClass: SpecialtiesRepository,
+    },
+  ],
+  exports: [TypeOrmModule, ISpecialtiesRepository],
 })
 export class SpecialtiesModule {}

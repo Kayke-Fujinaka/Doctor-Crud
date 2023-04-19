@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { config } from './configs/ormconfig';
-import { DoctorModule } from './doctors/doctors.module';
+
+import { DoctorsModule } from './doctors/doctors.module';
+import { ormconfig } from './ormconfig';
 import { SpecialtiesModule } from './specialties/specialties.module';
 
+require('dotenv/config');
 @Module({
-  imports: [DoctorModule, TypeOrmModule.forRoot(config), SpecialtiesModule],
+  imports: [TypeOrmModule.forRoot(ormconfig), SpecialtiesModule, DoctorsModule],
 })
 export class AppModule {}

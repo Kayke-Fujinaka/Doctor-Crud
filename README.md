@@ -1,73 +1,56 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Refactor Doctor Crud
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Sumário
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> Neste desafio, vocês deverão refatorar um repositório de CRUD de médicos utilizando todos os conhecimentos que vocês adquiriram ao longo desta jornada!!! Esse desafio tem como objetivo desenvolver o trabalho em equipe do grupo, organização de tarefas, manutenção/refatoração do código e colocar os conhecimentos em prática.
 
-## Description
+# 📜 Contextualização
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+O CRUD de médico é uma API que simula um sistema de gerenciamento de médicos que deve ser arquitetado utilizando um relacionamento de Banco de Dados, estrutura da API, o fluxo do CRUD e deve conter testes unitários.
 
-## Installation
+Documentação do CRUD de médicos na página logo abaixo:
 
-```bash
-$ npm install
-```
+[Crud de Médicos](https://www.notion.so/Crud-de-M-dicos-ab3f3c0515c7483c8c7d7d8572851b17)
 
-## Running the app
+# ❓ Case
 
-```bash
-# development
-$ npm run start
+Vocês devem utiizar o repositório _Academy-Doctor-Crud_ da GCB para realizar refatoração e a implementação de novas funcionalidades. Assim, vocês devem utilizar o trabalho em equipe, o conhecimento adquirido e estudar novos conceitos que serão necessário para a realização deste desafio.
 
-# watch mode
-$ npm run start:dev
+O fluxo de trabalho possui duas ramificações primárias, sendo: `master` e `develop`. Neste cenário, vocês devem se organizar desenvolvendo o desafio somente pela `develop`, assim vocês podem criar uma ou mais branch que ao finalizar devem subir para a `develop` ou realizar o desafio a partir da própria `develop`. Utilizem o que acharem mais viável.
 
-# production mode
-$ npm run start:prod
-```
+O Link do repositório está logo abaixo:
 
-## Test
+[](https://github.com/Grupo-GCB/Academy-Doctor-Crud)
 
-```bash
-# unit tests
-$ npm run test
+# **❗** Requisitos
 
-# e2e tests
-$ npm run test:e2e
+Durante o processo de refatoração vocês devem implementar:
 
-# test coverage
-$ npm run test:cov
-```
+- Princípios
+  - SOLID
+  - Don’t Repeat Yourself (DRY)
+  - Small Commits
+- Design Pattern
+  - Dependency Injection
+  - Factory Method
+  - Composite
+  - Decorator
+- Metodologias
+  - Clean Code
+  - Clean Architecture
+  - TDD
+  - Use Cases
+  - Conventional Commits
+- Bibliotecas e Frameworks
+  - Eslint
+  - Typescript
+  - NestJS
+  - Docker
+  - Swagger
+  - Testes unitários utilizando In Memory
 
-## Support
+# 🚀 Terminou o desafio?
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Após finalizar a aplicação, você deve documentar o repositório, mostrar as documentações/referências que utilizou para desenvolver o projeto.
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Por fim criem um Pull Request para a branch dev e aguardem o Feedback :)
